@@ -1,0 +1,25 @@
+from collections import deque
+class Solution:
+    def isEscapePossible(self, blocked, source, target):
+        BLOCK = set(map(tuple, blocked))
+        LIMIT = 20000
+        DIRS = [(1,0), (-1,0), (0,1), (0,-1)]
+        MAX = 10**6
+        def bfs(start, end):
+            visited = set()
+            q = deque([tuple(start)])
+            visited.add(tuple(start))
+            while q:
+                x, y = q.popleft()
+                if [x, y] == end:
+                    return True
+                for dx, dy in DIRS:
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < MAX and 0 <= ny < MAX:
+                        if (nx, ny) not in BLOCK and (nx, ny) not in visited:
+                            visited.add((nx, ny))
+                            q.append((nx, ny))
+                if len(visited) > LIMIT:
+                    return True
+            return False
+        return bfs(source, target) and bfs(target, source)
